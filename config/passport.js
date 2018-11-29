@@ -70,7 +70,7 @@ module.exports = function(passport) {
                     }
                     //  We're not logged in, so we're creating a brand new user.
                     else {
-                        
+
                         // create the user
                         var newUser            = new User();
 
@@ -201,7 +201,9 @@ module.exports = function(passport) {
                     });
 
                 } else {
-                    // user already exists and is logged in, we have to link accounts
+
+
+                        // user already exists and is logged in, we have to link accounts
                     var user            = req.user; // pull the user out of the session
 
                     // update the current users facebook credentials
