@@ -75,9 +75,14 @@ module.exports = function(app, passport) {
         }));
 
     // route for logging out
-    app.get('/logout', function(req, res) {
+    app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
+    });
+
+    // route for test
+    app.get('/test', isLoggedIn, function (req, res) {
+        res.json("test");
     });
 
     // =====================================
