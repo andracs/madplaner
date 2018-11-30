@@ -1,4 +1,4 @@
-<!-- views/index.ejs -->
+<!-- views/failure.ejs -->
 <!doctype html>
 <html>
 <head>
@@ -16,6 +16,10 @@
         <h1><span class="fa fa-lock"></span> Node Authentication</h1>
 
 
+        <!-- show any messages that come back with authentication -->
+        <% if (message.length > 0) { %>
+            <div class="alert alert-danger"><%= message %></div>
+        <% } %>
 
         <p>Login or Register with:</p>
 

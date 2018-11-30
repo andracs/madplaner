@@ -149,8 +149,10 @@ module.exports = function(passport) {
             process.nextTick(function() {
 
                 // check if the user is already logged in
+                console.log("hall2o");
+                console.log("hal23lo");
                 if (!req.user) {
-
+                    console.log("hallo");
                     // find the user in the database based on their facebook id
                     User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
 
@@ -189,6 +191,8 @@ module.exports = function(passport) {
                             newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
 
                             // save our user to the database
+                            console.log("new userLAst save");
+
                             newUser.save(function(err) {
                                 if (err)
                                     throw err;
@@ -202,22 +206,39 @@ module.exports = function(passport) {
 
                 } else {
 
+                    User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
 
-                        // user already exists and is logged in, we have to link accounts
-                    var user            = req.user; // pull the user out of the session
-
-                    // update the current users facebook credentials
-                    user.facebook.id    = profile.id;
-                    user.facebook.token = token;
-                    user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-                    user.facebook.email = profile.emails[0].value;
-
-                    // save the user
-                    user.save(function(err) {
+                        // if there is an error, stop everything and return that
+                        // ie an error connecting to the database
                         if (err)
-                            throw err;
-                        return done(null, user);
+                            return done(err);
+
+                        // if the user is found, then log them in
+                        if (user) {
+                            console.log("facebook already linked");
+                            return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                        }
+                        else{
+                            // user already exists and is logged in, we have to link accounts
+                            var user            = req.user; // pull the user out of the session
+
+                            // update the current users facebook credentials
+                            user.facebook.id    = profile.id;
+                            user.facebook.token = token;
+                            user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+                            user.facebook.email = profile.emails[0].value;
+
+                            // save the user
+                            console.log("LAst save");
+
+                            user.save(function(err) {
+                                if (err)
+                                    throw err;
+                                return done(null, user);
+                            });
+                        }
                     });
+
                 }
 
             });

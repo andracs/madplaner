@@ -116,33 +116,6 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // facebook -------------------------------
-
-    // send to facebook to do the authentication
-    app.get('/connect/facebook', passport.authorize('facebook', {
-        scope : ['public_profile', 'email']
-    }));
-
-    // handle the callback after facebook has authorized the user
-    app.get('/connect/facebook/callback',
-        passport.authorize('facebook', {
-            successRedirect : '/profile',
-            failureRedirect : '/'
-        }));
-
-
-    // google ---------------------------------
-
-    // send to google to do the authentication
-    app.get('/connect/google', passport.authorize('google', { scope : ['profile', 'email'] }));
-
-    // the callback after google has authorized the user
-    app.get('/connect/google/callback',
-        passport.authorize('google', {
-            successRedirect : '/profile',
-            failureRedirect : '/'
-        }));
-
     // =============================================================================
 // UNLINK ACCOUNTS =============================================================
 // =============================================================================
