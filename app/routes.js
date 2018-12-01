@@ -60,6 +60,8 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
+
+
     // =====================================
     // FACEBOOK ROUTES =====================
     // =====================================
@@ -123,13 +125,13 @@ module.exports = function(app, passport) {
     // facebook -------------------------------
 
     // send to facebook to do the authentication
-    app.get('/connect/facebook', passport.authorize('facebookauthorize', {
+    app.get('/connect/facebook', passport.authenticate('facebookauthorize', {
         scope : ['public_profile', 'email']
     }));
 
     // handle the callback after facebook has authorized the user
     app.get('/connect/facebook/callback',
-        passport.authorize('facebookauthorize', {
+        passport.authenticate('facebookauthorize', {
             successRedirect : '/profile',
             failureRedirect : '/profile',
             failureFlash : true // allow flash messages
@@ -140,11 +142,12 @@ module.exports = function(app, passport) {
     // google ---------------------------------
 
     // send to google to do the authentication
-    app.get('/connect/google', passport.authorize('googleauthorize', { scope : ['profile', 'email'] }));
+    app.get('/connect/google', passport.authenticate('googleauthorize', { scope : ['profile', 'email'] }));
+
 
     // the callback after google has authorized the user
     app.get('/connect/google/callback',
-        passport.authorize('googleauthorize', {
+        passport.authenticate('googleauthorize', {
             successRedirect : '/profile',
             failureRedirect : '/profile',
             failureFlash : true // allow flash messages

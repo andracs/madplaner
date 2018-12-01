@@ -311,16 +311,17 @@ module.exports = function(passport) {
                     });
 
                 } else {
+
                     User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+
                         // if there is an error, stop everything and return that
                         // ie an error connecting to the database
-
                         if (err)
                             return done(err);
 
                         // if the user is found, then log them in
                         if (user) {
-                             return done(null, false, req.flash('failuremessage', 'Facebook already linked')); // create the loginMessage and save it to session as flashdata
+                            return done(null, false, req.flash('failuremessage', 'Facebook already linked')); // create the loginMessage and save it to session as flashdata
                             //return res.redirect('/profile');
                         }
                         else{
@@ -337,6 +338,8 @@ module.exports = function(passport) {
                             user.save(function(err) {
                                 if (err)
                                     throw err;
+                                console.log(user);
+                                console.log("returndone");
                                 return done(null, user);
                             });
                         }
@@ -504,7 +507,7 @@ module.exports = function(passport) {
 
                 } else {
 
-                    User.findOne({ 'google.token' : profile.id }, function(err, user) {
+                    User.findOne({ 'google.id' : profile.id }, function(err, user) {
 
                         // if there is an error, stop everything and return that
                         // ie an error connecting to the database
