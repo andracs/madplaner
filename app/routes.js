@@ -47,7 +47,8 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user : req.user, // get the user out of session and pass to template
+            message: req.flash('failuremessage')
         });
     });
 
@@ -63,13 +64,13 @@ module.exports = function(app, passport) {
     // FACEBOOK ROUTES =====================
     // =====================================
     // route for facebook authentication and login
-    app.get('/auth/facebook', passport.authenticate('facebook', {
+    app.get('/auth/facebook', passport.authenticate('facebookauth', {
         scope : ['public_profile', 'email']
     }));
 
     // handle the callback after facebook has authenticated the user
     app.get('/auth/facebook/callback',
-        passport.authenticate('facebook', {
+        passport.authenticate('facebookauth', {
             successRedirect : '/profile',
             failureRedirect : '/'
         }));
@@ -91,13 +92,15 @@ module.exports = function(app, passport) {
     // send to google to do the authentication
     // profile gets us their basic information including their name
     // email gets their emails
-    app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+    app.get('/auth/google', passport.authenticate('googleauth', { scope : ['profile', 'email'] }));
 
     // the callback after google has authenticated the user
     app.get('/auth/google/callback',
-        passport.authenticate('google', {
+        passport.authenticate('googleauth', {
             successRedirect : '/profile',
-            failureRedirect : '/'
+            failureRedirect : '/',
+            failureFlash : true // allow flash messages
+
         }));
 
 
@@ -116,6 +119,37 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
+
+    // facebook -------------------------------
+
+    // send to facebook to do the authentication
+    app.get('/connect/facebook', passport.authorize('facebookauthorize', {
+        scope : ['public_profile', 'email']
+    }));
+
+    // handle the callback after facebook has authorized the user
+    app.get('/connect/facebook/callback',
+        passport.authorize('facebookauthorize', {
+            successRedirect : '/profile',
+            failureRedirect : '/profile',
+            failureFlash : true // allow flash messages
+
+        }));
+
+
+    // google ---------------------------------
+
+    // send to google to do the authentication
+    app.get('/connect/google', passport.authorize('googleauthorize', { scope : ['profile', 'email'] }));
+
+    // the callback after google has authorized the user
+    app.get('/connect/google/callback',
+        passport.authorize('googleauthorize', {
+            successRedirect : '/profile',
+            failureRedirect : '/profile',
+            failureFlash : true // allow flash messages
+
+        }));
     // =============================================================================
 // UNLINK ACCOUNTS =============================================================
 // =============================================================================
@@ -137,6 +171,7 @@ module.exports = function(app, passport) {
     app.get('/unlink/facebook', function(req, res) {
         var user            = req.user;
         user.facebook.token = undefined;
+        user.facebook.id    =undefined;
         user.save(function(err) {
             res.redirect('/profile');
         });
@@ -146,6 +181,7 @@ module.exports = function(app, passport) {
     app.get('/unlink/google', function(req, res) {
         var user          = req.user;
         user.google.token = undefined;
+        user.google.id    =undefined;
         user.save(function(err) {
             res.redirect('/profile');
         });

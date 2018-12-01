@@ -131,7 +131,7 @@ module.exports = function(passport) {
     // =========================================================================
     // FACEBOOK ================================================================
     // =========================================================================
-    passport.use(new FacebookStrategy({
+    passport.use( 'facebookauth', new FacebookStrategy({
 
             // pull in our app id and secret from our auth.js file
             clientID        : configAuth.facebookAuth.clientID,
@@ -149,10 +149,7 @@ module.exports = function(passport) {
             process.nextTick(function() {
 
                 // check if the user is already logged in
-                console.log("hall2o");
-                console.log("hal23lo");
                 if (!req.user) {
-                    console.log("hallo");
                     // find the user in the database based on their facebook id
                     User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
 
@@ -191,8 +188,6 @@ module.exports = function(passport) {
                             newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
 
                             // save our user to the database
-                            console.log("new userLAst save");
-
                             newUser.save(function(err) {
                                 if (err)
                                     throw err;
@@ -215,8 +210,8 @@ module.exports = function(passport) {
 
                         // if the user is found, then log them in
                         if (user) {
-                            console.log("facebook already linked");
-                            return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                            return done(null, false, req.flash('failuremessage', 'Facebook already linked')); // create the loginMessage and save it to session as flashdata
+                            //return res.redirect('/profile');
                         }
                         else{
                             // user already exists and is logged in, we have to link accounts
@@ -229,8 +224,116 @@ module.exports = function(passport) {
                             user.facebook.email = profile.emails[0].value;
 
                             // save the user
-                            console.log("LAst save");
+                            user.save(function(err) {
+                                if (err)
+                                    throw err;
+                                return done(null, user);
+                            });
+                        }
+                    });
 
+                }
+
+            });
+
+        }));
+
+    // =========================================================================
+    // FACEBOOK Authorize ================================================================
+    // =========================================================================
+
+    passport.use( 'facebookauthorize', new FacebookStrategy({
+
+            // pull in our app id and secret from our auth.js file
+            clientID        : configAuth.facebookAuthorize.clientID,
+            clientSecret    : configAuth.facebookAuthorize.clientSecret,
+            callbackURL     : configAuth.facebookAuthorize.callbackURL,
+            profileFields: configAuth.facebookAuthorize.profileFields,
+            passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
+
+        },
+
+        // facebook will send back the token and profile
+        function(req, token, refreshToken, profile, done) {
+
+            // asynchronous
+            process.nextTick(function() {
+
+                // check if the user is already logged in
+                if (!req.user) {
+                    // find the user in the database based on their facebook id
+                    User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+
+                        // if there is an error, stop everything and return that
+                        // ie an error connecting to the database
+                        if (err)
+                            return done(err);
+
+                        // if the user is found, then log them in
+                        if (user) {
+
+                            // if there is a user id already but no token (user was linked at one point and then removed)
+                            // just add our token and profile information
+                            if (!user.facebook.token) {
+                                user.facebook.token = token;
+                                user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+                                user.facebook.email = profile.emails[0].value;
+
+                                user.save(function(err) {
+                                    if (err)
+                                        throw err;
+                                    return done(null, user);
+                                });
+                            }
+
+
+                            return done(null, user); // user found, return that user
+                        } else {
+                            // if there is no user found with that facebook id, create them
+                            var newUser            = new User();
+
+                            // set all of the facebook information in our user model
+                            newUser.facebook.id    = profile.id; // set the users facebook id
+                            newUser.facebook.token = token; // we will save the token that facebook provides to the user
+                            newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+                            newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
+
+                            // save our user to the database
+                            newUser.save(function(err) {
+                                if (err)
+                                    throw err;
+
+                                // if successful, return the new user
+                                return done(null, newUser);
+                            });
+                        }
+
+                    });
+
+                } else {
+                    User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+                        // if there is an error, stop everything and return that
+                        // ie an error connecting to the database
+
+                        if (err)
+                            return done(err);
+
+                        // if the user is found, then log them in
+                        if (user) {
+                             return done(null, false, req.flash('failuremessage', 'Facebook already linked')); // create the loginMessage and save it to session as flashdata
+                            //return res.redirect('/profile');
+                        }
+                        else{
+                            // user already exists and is logged in, we have to link accounts
+                            var user            = req.user; // pull the user out of the session
+
+                            // update the current users facebook credentials
+                            user.facebook.id    = profile.id;
+                            user.facebook.token = token;
+                            user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+                            user.facebook.email = profile.emails[0].value;
+
+                            // save the user
                             user.save(function(err) {
                                 if (err)
                                     throw err;
@@ -248,7 +351,7 @@ module.exports = function(passport) {
     // =========================================================================
     // GOOGLE ==================================================================
     // =========================================================================
-    passport.use(new GoogleStrategy({
+    passport.use('googleauth',new GoogleStrategy({
 
             clientID        : configAuth.googleAuth.clientID,
             clientSecret    : configAuth.googleAuth.clientSecret,
@@ -326,6 +429,118 @@ module.exports = function(passport) {
             });
 
         }));
+
+    // =========================================================================
+// Google Authorize ================================================================
+// =========================================================================
+
+    passport.use( 'googleauthorize', new GoogleStrategy({
+
+
+            clientID        : configAuth.googleAuthorize.clientID,
+            clientSecret    : configAuth.googleAuthorize.clientSecret,
+            callbackURL     : configAuth.googleAuthorize.callbackURL,
+            passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
+
+        },
+
+        // facebook will send back the token and profile
+        function(req, token, refreshToken, profile, done) {
+
+            // asynchronous
+            process.nextTick(function() {
+
+                // check if the user is already logged in
+
+                if (!req.user) {
+                    // find the user in the database based on their facebook id
+                    User.findOne({ 'google.id' : profile.id }, function(err, user) {
+
+                        // if there is an error, stop everything and return that
+                        // ie an error connecting to the database
+                        if (err)
+                            return done(err);
+
+                        // if the user is found, then log them in
+                        if (user) {
+
+                            // if there is a user id already but no token (user was linked at one point and then removed)
+                            // just add our token and profile information
+                            if (!user.google.token) {
+                                user.google.token = token;
+                                user.google.name  = profile.name.givenName + ' ' + profile.name.familyName;
+                                user.google.email = profile.emails[0].value;
+
+                                user.save(function(err) {
+                                    if (err)
+                                        throw err;
+                                    return done(null, user);
+                                });
+                            }
+
+
+                            return done(null, user); // user found, return that user
+                        } else {
+                            // if there is no user found with that facebook id, create them
+                            var newUser            = new User();
+
+                            // set all of the facebook information in our user model
+                            newUser.google.id    = profile.id; // set the users facebook id
+                            newUser.google.token = token; // we will save the token that facebook provides to the user
+                            newUser.google.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+                            newUser.google.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
+
+                            // save our user to the database
+                            newUser.save(function(err) {
+                                if (err)
+                                    throw err;
+
+                                // if successful, return the new user
+                                return done(null, newUser);
+                            });
+                        }
+
+                    });
+
+                } else {
+
+                    User.findOne({ 'google.token' : profile.id }, function(err, user) {
+
+                        // if there is an error, stop everything and return that
+                        // ie an error connecting to the database
+                        if (err)
+                            return done(err);
+
+                        // if the user is found, then log them in
+                        if (user) {
+                            return done(null, false, req.flash('failuremessage', 'Google already linked')); // create the loginMessage and save it to session as flashdata
+                            //return res.redirect('/profile');
+                        }
+                        else{
+                            // user already exists and is logged in, we have to link accounts
+                            var user            = req.user; // pull the user out of the session
+
+                            // update the current users facebook credentials
+                            user.google.id    = profile.id;
+                            user.google.token = token;
+                            user.google.name  = profile.name.givenName + ' ' + profile.name.familyName;
+                            user.google.email = profile.emails[0].value;
+
+                            // save the user
+                            user.save(function(err) {
+                                if (err)
+                                    throw err;
+                                return done(null, user);
+                            });
+                        }
+                    });
+
+                }
+
+            });
+
+        }));
+
 
 
 };
