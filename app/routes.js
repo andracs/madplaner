@@ -23,6 +23,37 @@ module.exports = function(app, passport) {
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
+
+
+    // =====================================
+    // Recipe ===============================
+    // =====================================
+    // show the login form
+    app.get('/recipe', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('recipe.ejs', { message: req.flash('loginMessage') });
+    });
+    app.get('/create/recipe', function(req, res) {
+        var Recipe            = require('../app/models/recipe');
+
+
+
+                var recipe = new Recipe({name:"Lasagne", ingredients: [["ingredient1","amount"],["ingredient2","amount"]]});
+
+                recipe.save(function (err, recipe) {
+                    if (err) return console.error(err);
+
+                });
+        res.redirect('/recipe');
+
+    });
+    app.get('/app/createRecipe.js', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('createRecipe.js');
+    });
+
     // =====================================
     // SIGNUP ==============================
     // =====================================

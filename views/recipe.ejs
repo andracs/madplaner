@@ -1,0 +1,73 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <script>
+
+        function addFields(){
+            console.log("works");
+            var container = document.getElementById("ingredientslist");
+
+            for (let i = 0; i < 5 ; i++) {
+
+
+                container.appendChild(document.createElement("br"));
+                // Append a node with a random text
+                container.appendChild(document.createTextNode("Ingredient: "));
+                // Create an <input> element, set its type and name attributes
+                var input = document.createElement("input");
+                input.type = "text";
+                input.name = "name_field";
+                input.id = "ingredient";
+                container.appendChild(input);
+
+                container.appendChild(document.createTextNode("Amount: "));
+
+                var amount = document.createElement("input");
+                amount.type = "text";
+                amount.name = "name_field";
+                amount.id = "amount";
+                container.appendChild(amount);
+
+
+                // Append a line break
+                container.appendChild(document.createElement("br"));
+
+            }
+        }</script>
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/create/recipe" class="btn btn-default">Create recipe</a>
+
+    <form action="ingredientslist" id="ingredientslist" method="post">
+        <label for="ingredient">Ingredient: </label>
+        <input id="ingredient" type="text" name="name_field" value="">
+        <label for="amount">Amount: </label>
+        <input id="amount" type="text" name="name_field" value="">
+        <input type="submit" value="OK">
+    </form>
+    <a href="#" id="addfield" onclick="addFields()">Add more ingredients</a>
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+    <!-- show any messages that come back with authentication -->
+    <% if (message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+    <% } %>
+    <div class="row">
+
+
+    </div>
+
+</div>
+</body>
+</html>
