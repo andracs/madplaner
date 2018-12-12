@@ -8,6 +8,7 @@ var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
+//const layout = require('express-layout');
 
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -33,6 +34,14 @@ app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secre
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+
+//middleware
+const middleware = [
+//layout(),
+ //express.static(path.join(__dirname, 'public')),
+ bodyParser.urlencoded()
+];
+app.use(middleware);
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport

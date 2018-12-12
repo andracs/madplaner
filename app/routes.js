@@ -1,3 +1,5 @@
+var recipe_controller = require('../app/controllers/recipeController.js');
+
 module.exports = function(app, passport) {
 
     // =====================================
@@ -32,7 +34,7 @@ module.exports = function(app, passport) {
     app.get('/recipe', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('recipe.ejs', { message: req.flash('loginMessage') });
+        res.render('recipe.ejs', { message: req.flash('loginMessage'), data:{},errors:{}  } );
     });
     app.get('/create/recipe', function(req, res) {
         var Recipe            = require('../app/models/recipe');
@@ -53,6 +55,10 @@ module.exports = function(app, passport) {
         // render the page and pass in any flash data if it exists
         res.render('createRecipe.js');
     });
+
+
+    app.post('/recipe', recipe_controller.recipe_create
+    );
 
     // =====================================
     // SIGNUP ==============================

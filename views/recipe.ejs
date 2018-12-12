@@ -10,9 +10,9 @@
         function addFields(){
             console.log("works");
             var container = document.getElementById("ingredientslist");
-
+            var increased =0;
             for (let i = 0; i < 5 ; i++) {
-
+                increased++;
 
                 container.appendChild(document.createElement("br"));
                 // Append a node with a random text
@@ -20,7 +20,7 @@
                 // Create an <input> element, set its type and name attributes
                 var input = document.createElement("input");
                 input.type = "text";
-                input.name = "name_field";
+                input.name = "ingredient";
                 input.id = "ingredient";
                 container.appendChild(input);
 
@@ -28,7 +28,7 @@
 
                 var amount = document.createElement("input");
                 amount.type = "text";
-                amount.name = "name_field";
+                amount.name = "amount";
                 amount.id = "amount";
                 container.appendChild(amount);
 
@@ -46,11 +46,12 @@
 <div class="container">
     <a href="/create/recipe" class="btn btn-default">Create recipe</a>
 
-    <form action="ingredientslist" id="ingredientslist" method="post">
+    <form action="/recipe" id="ingredientslist" method="post">
+        <input id="name" type="text" name="name" value="Lasagne">
         <label for="ingredient">Ingredient: </label>
-        <input id="ingredient" type="text" name="name_field" value="">
+        <input id="ingredient" type="text" name="ingredient" value="">
         <label for="amount">Amount: </label>
-        <input id="amount" type="text" name="name_field" value="">
+        <input id="amount" type="text" name="amount" value="">
         <input type="submit" value="OK">
     </form>
     <a href="#" id="addfield" onclick="addFields()">Add more ingredients</a>
@@ -60,10 +61,7 @@
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
     <!-- show any messages that come back with authentication -->
-    <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
-    <% } %>
-    <div class="row">
+
 
 
     </div>
