@@ -28,3 +28,38 @@ console.log(recipe);
     res.render("recipe");
 };
 
+
+exports.recipe_view = function(req, res) {
+
+
+    Recipe.find(function (err, docs) {
+        var returnd="";
+        //docs.name;
+        console.log(docs);
+        console.log(docs.name);
+        docs.forEach(function(doc) {
+          console.log(doc.name);
+          returnd+=doc.name;
+           // var table = document.getElementById("recipe_table");
+           // var row = table.insertRow(0);
+           // var cell1 = row.insertCell(0);
+           // cell1.innerHTML = doc.name;
+
+        });
+
+       // res.send(returnd);
+        //res.render("recipelist");
+        res.send(returnd);
+
+    });
+
+
+    //console.log();
+    //res.send(returnd);
+   // res.send(returnd);
+    //res.render("recipelist");
+    //console.log(returnd);
+
+
+
+};

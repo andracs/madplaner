@@ -1,4 +1,5 @@
 var recipe_controller = require('../app/controllers/recipeController.js');
+var recipe_list = require('../app/recipeList');
 
 module.exports = function(app, passport) {
 
@@ -60,6 +61,19 @@ module.exports = function(app, passport) {
     app.post('/recipe', recipe_controller.recipe_create
     );
 
+    app.get('/recipe/view', recipe_controller.recipe_view
+
+    );
+    app.get('/recipelist', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('recipelist.ejs');
+    });
+
+    app.get('/app/recipeList.js', recipe_list.recipe_list
+    );
+
+
     // =====================================
     // SIGNUP ==============================
     // =====================================
@@ -76,6 +90,8 @@ module.exports = function(app, passport) {
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
+
+
 
     // =====================================
     // PROFILE SECTION =====================
