@@ -61,13 +61,21 @@ module.exports = function(app, passport) {
     app.post('/recipe', recipe_controller.recipe_create
     );
 
-    app.get('/recipe/view', recipe_controller.recipe_view
+    app.get('/recipe/view', recipe_controller.recipe_view_own
+
+    );
+    app.get('/recipe/viewall', recipe_controller.recipe_view_all
 
     );
     app.get('/recipelist', function(req, res) {
 
         // render the page and pass in any flash data if it exists
         res.render('recipelist.ejs');
+    });
+    app.get('/recipelistall', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('recipelistall.ejs');
     });
 
     app.get('/recipe/single', function(req, res, next) {
@@ -84,6 +92,17 @@ module.exports = function(app, passport) {
     //app.get('/app/recipeList.js', recipe_list.recipe_list
     //);
 
+    app.get('/recipe/random',  function(req, res, next) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('random_recipe.ejs');
+
+    });
+    app.post('/recipe/remove/:recipetoremove', recipe_controller.recipe_remove
+    );
+
+    app.post('/recipe/random', recipe_controller.recipe_random
+    );
 
     // =====================================
     // SIGNUP ==============================

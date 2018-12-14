@@ -9,6 +9,7 @@ exports.recipe_create = function(req, res) {
     ingredientarray= req.body.ingredient;
     var amountarray=req.body.amount;
     var description = req.body.description;
+    var user = req.user;
 //console.log(req.body.description);
     //console.log(postBody);
     //console.log(name+ingredientarray+amountarray);
@@ -26,7 +27,7 @@ exports.recipe_create = function(req, res) {
             return el !== "";
         });
 
-        var recipe = new Recipe({name: name, ingredients: [], description: description});
+        var recipe = new Recipe({name: name, ingredients: [], description: description, user:user._id});
 
         for (index = 0; index < ingredientarray.length; ++index) {
             recipe.ingredients.push([ingredientarray[index], amountarray[index]]);
@@ -42,11 +43,22 @@ exports.recipe_create = function(req, res) {
 };
 
 
-exports.recipe_view = function(req, res) {
-    Recipe.find(function (err, docs) {
+exports.recipe_view_own = function(req, res) {
+    var userid = req.user._id;
+    Recipe.find({user:userid},function (err, docs) {
         var returnd="";
         docs.forEach(function(doc) {
           returnd+=doc.name+",";
+        });
+        res.send(returnd);
+    });
+};
+
+exports.recipe_view_all = function(req, res) {
+    Recipe.find(function (err, docs) {
+        var returnd="";
+        docs.forEach(function(doc) {
+            returnd+=doc.name+",";
         });
         res.send(returnd);
     });
@@ -72,4 +84,59 @@ var result= new Recipe();
         // render the page and pass in any flash data if it exists
 
 
+};
+
+exports.recipe_random = function(req, res) {
+
+    var result= new Recipe();
+    Recipe.find(function (err, docs) {
+        var returnd="";
+        var searchelement="12";
+
+        var increment=0;
+        docs.forEach(function(doc) {
+            var ingredient;
+            increment++;
+            for (let i = 0; i <doc.ingredients.length ; i++) {
+                ingredient=doc.ingredients[i];
+                if (ingredient.includes(searchelement)===true) {
+                    delete docs[increment-1];
+                }
+
+            }
+        });
+
+        docs.forEach(function(doc) {
+            returnd+=doc.name+",";
+        });
+        //console.log(returnd);
+        var tarray = returnd.split(",");
+        tarray.pop();
+
+        var random_number =Math.round(Math.random() * (tarray.length-1));
+
+
+        //console.log(tarray[random_number].name);
+        //console.log(random_number+"randomnumberyo");
+       // var index_length = tarray.length;
+
+//console.log(tarray[random_number]);
+        res.send(tarray[random_number]);
+    });
+
+
+    // render the page and pass in any flash data if it exists
+
+
+};
+
+
+
+exports.recipe_remove = function(req, res) {
+    var name= req.body.recipe_name;
+    var userid = req.user._id;
+
+    Recipe.remove({name:req.params.recipetoremove,user:userid},function (err) {
+        res.send(err);
+    });
 };

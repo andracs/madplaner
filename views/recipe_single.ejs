@@ -9,8 +9,8 @@
             var url_string = window.location.href; //window.location.href
             var url = new URL(url_string);
             var c = url.searchParams.get("recipe");
-            console.log(c);
-            $.post("http://localhost:8080/recipe/single/"+c, function(data, status){
+
+            $.post("/recipe/single/"+c, function(data, status){
                 //alert("Data: " + data + "\nStatus: " + status);
                 $("#recipe_name").append(data.name);
 
@@ -24,7 +24,10 @@
 
                 // $("#ingredients").append(data.ingredients);
             });
-
+$("#remove_recipe").click(function() {
+    $.post("/recipe/remove/"+c, function(data, status){
+});
+        });
         });
 
 
@@ -64,6 +67,8 @@ Ingredients: <br>
 </div>
 <a href="/recipe" class="btn btn-default">Back to Create a recipe</a>
 <a href="/recipelist" class="btn btn-default">Back to recipe menu</a>
+<button id="remove_recipe" class="btn btn-default">Remove recipe</button>
+
 
 </body>
 </html>

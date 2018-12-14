@@ -1,0 +1,77 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+          //  var url_string = window.location.href; //window.location.href
+            //var url = new URL(url_string);
+            //var c = url.searchParams.get("recipe");
+            //console.log(c);
+            $.post("random/", function(data, status){
+                //alert("Data: " + data + "\nStatus: " + status);
+                //console.log(data);
+                $("#recipe_list").append("<a href=/recipe/single?recipe="+data+ " class='btn btn-default'>"+data+ "</a>");
+
+               // data.ingredients.forEach(function (ingredient) {
+
+                 //   $("#ingredients").append(ingredient[0]+":"+ingredient[1]+"<br>");
+
+
+               // });
+             //   $("#description_recipe_single").append(data.description);
+
+                // $("#ingredients").append(data.ingredients);
+            });
+            // console.log(string);
+
+
+
+
+
+
+
+
+        });
+    </script>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+    </style>
+
+
+</head>
+<body>
+<div>
+    Recipe list
+
+
+
+</div>
+
+<div id="recipe_list">
+    <row>
+        <table style="width:100%" id="recipe_table">
+            <tr>
+                <th>Opskrift Navn</th>
+            </tr>
+        </table>
+
+    </row>
+
+
+</div>
+<a href="/recipe" class="btn btn-default">Back to Create a recipe</a>
+
+<button class="btn btn-default" id="random_recipe_button">Get New random Recipe</button>
+
+
+</body>
+</html>
