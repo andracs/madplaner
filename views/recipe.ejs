@@ -47,23 +47,28 @@
     <a href="/create/recipe" class="btn btn-default">Create recipe</a>
 
     <form action="/recipe" id="ingredientslist" method="post">
+        <label for="ingredient">Name of Recipe: </label>
+        <br>
         <input id="name" type="text" name="name" value="Lasagne">
-        <label for="ingredient">Ingredient: </label>
-        <input id="ingredient" type="text" name="ingredient" value="">
-        <label for="amount">Amount: </label>
-        <input id="amount" type="text" name="amount" value="">
+
         <input type="submit" value="OK">
+        <br>
+
+        <label for="description">Description: </label>
+        <br>
+        <textarea rows="5" cols="80" id="description" name="description"></textarea>
+<br>
+
+
     </form>
     <a href="#" id="addfield" onclick="addFields()">Add more ingredients</a>
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-        <a href="/recipe/view" class="btn btn-default btn-sm">View Recipe</a>
+        <a href="/recipelist" class="btn btn-default btn-sm">View own Recipes</a>
+        <a href="/recipelist" class="btn btn-default btn-sm">View others Recipes</a>
 
     </div>
-    <!-- show any messages that come back with authentication -->
-
 
 
     </div>

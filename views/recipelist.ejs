@@ -2,7 +2,40 @@
 <!doctype html>
 <html>
 <head>
-    <script src="../app/recipeList.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            const Http = new XMLHttpRequest();
+            const Url ="http://localhost:8080/recipe/view"
+            var string="";
+            $.get(Url,function (data,status) {
+                //console.log(`${data}`)
+                string= `${data}`;
+                //console.log(string);
+                var tarray = string.split(",");
+                tarray.pop();
+                //console.log(tarray);
+                tarray.forEach(function(element) {
+                    var table = document.getElementById("recipe_table");
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    cell1.innerHTML = "<a href='/recipe/single?recipe="+element+"' class='btn btn-default'>"+element+ "</a>";
+                    //console.log(element);
+                });
+            })
+           // console.log(string);
+
+
+
+
+
+
+
+
+        });
+    </script>
     <title>Node Authentication</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
@@ -27,18 +60,13 @@
         <tr>
             <th>Opskrift Navn</th>
         </tr>
-        <tr>
-            <td>Jill</td>
-        </tr>
-        <tr>
-            <td>Eve</td>
-        </tr>
     </table>
 
 </row>
 
 
 </div>
+<a href="/recipe" class="btn btn-default">Back to Create a recipe</a>
 
 
 </body>

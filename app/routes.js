@@ -70,8 +70,19 @@ module.exports = function(app, passport) {
         res.render('recipelist.ejs');
     });
 
-    app.get('/app/recipeList.js', recipe_list.recipe_list
-    );
+    app.get('/recipe/single', function(req, res, next) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('recipe_single.ejs');
+        next();
+
+    });
+    app.post('/recipe/single/:recipe',recipe_controller.recipe_single);
+
+    //app.get('/recipe/single', recipe_controller.recipe_single);
+
+    //app.get('/app/recipeList.js', recipe_list.recipe_list
+    //);
 
 
     // =====================================

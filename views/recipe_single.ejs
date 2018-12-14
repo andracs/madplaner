@@ -1,0 +1,69 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var url_string = window.location.href; //window.location.href
+            var url = new URL(url_string);
+            var c = url.searchParams.get("recipe");
+            console.log(c);
+            $.post("http://localhost:8080/recipe/single/"+c, function(data, status){
+                //alert("Data: " + data + "\nStatus: " + status);
+                $("#recipe_name").append(data.name);
+
+                data.ingredients.forEach(function (ingredient) {
+
+                    $("#ingredients").append(ingredient[0]+":"+ingredient[1]+"<br>");
+
+
+                });
+                $("#description_recipe_single").append(data.description);
+
+                // $("#ingredients").append(data.ingredients);
+            });
+
+        });
+
+
+    </script>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+    </style>
+
+
+</head>
+<body>
+<div id="recipe_name">
+    Recipe :
+</div>
+
+<div id="">
+    <row>
+        <div id="ingredients">
+Ingredients: <br>
+        </div>
+
+        <div id="amount">
+
+        </div>
+
+    </row>
+
+    <div id="description_recipe_single">
+        Description: <br>
+    </div>
+
+
+</div>
+<a href="/recipe" class="btn btn-default">Back to Create a recipe</a>
+<a href="/recipelist" class="btn btn-default">Back to recipe menu</a>
+
+</body>
+</html>
