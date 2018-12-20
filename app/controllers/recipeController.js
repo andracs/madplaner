@@ -87,135 +87,66 @@ var result= new Recipe();
 
 };
 
-function get_filters(filters){
-    var forbiddeningredients = [];
-    filters.forEach(function (filtername) {
-        Filter.find({name: filtername, user: userid}, function (err, foundfilter) {
-            foundfilter.forEach(function (filter) {
-                // console.log(filter.ingredients);
-                filter.ingredients.forEach(function (ingredient) {
-                    forbiddeningredients.push(ingredient[0]);
-                    console.log(forbiddeningredients+"inside");
-
-
-                });
-                //forbiddeningredients.push(filter.ingredients);
-            });
-
-        }).then(
-
-
-
-        );
-    });
-    return forbiddeningredients;
-
-}
-
-
 
 exports.recipe_random = function(req, res) {
 
-    var result = new Recipe();
     var filters = req.body.filters;
-    var hello = new Filter();
-    var forbiddeningredients = [];
-
-
-    forbiddeningredients=get_filters(filters).then(
-
-    );
     var userid = "5c143382f68a5133909f7c57"//req.user._id;
+    // TODO insert admin object id for filters at some points
+    var forbiddenarray = [];
+    var forbiddeningredients = new Promise(function(resolve, reject) {
+        if (filters !== undefined) {
+            filters.forEach(function (filtername) {
+                Filter.find({name: filtername, user: userid}, function (err, foundfilter) {
+                    foundfilter.forEach(function (filter) {
+                        filter.ingredients.forEach(function (ingredient) {
+                            forbiddenarray.push(ingredient[0]);
 
-    var forbiddeningredients = [];
-    console.log(filters);
-    if (filters !== undefined) {
+                        });
+                    });
 
-    filters.forEach(function (filtername) {
-        Filter.find({name: filtername, user: userid}, function (err, foundfilter) {
-            foundfilter.forEach(function (filter) {
-                // console.log(filter.ingredients);
-                filter.ingredients.forEach(function (ingredient) {
-                    forbiddeningredients.push(ingredient[0]);
-                    console.log(forbiddeningredients+"inside");
-
-
-                });
-                //forbiddeningredients.push(filter.ingredients);
+                })
             });
 
-        }).then(
+        }
+        resolve(forbiddenarray);
+     });
 
 
+    forbiddeningredients.then(function(forbiddenpromise) {
 
-        );
-    });
-}
-    Recipe.find(function (err, recipes) {
-        //console.log(forbiddeningredients+"inside second find");
-        console.log(forbiddeningredients+"outside");
+        Recipe.find(function (err, recipes) {
 
-        var returnd="";
-        var searchelement=forbiddeningredients;
+            var searchelement=forbiddenpromise;
 
-        var increment=0;
-        var deleted=false;
-        var recipe_array=[];
-        //console.log(searchelement);
-        //console.log(recipes+"first");
-        recipes.forEach(function(recipe) {
-            var ingredient;
-            //console.log(increment+"incrementone");
-            //console.log(recipes);
-            recipe_array.push(recipe);
+            var recipe_array=[];
 
-            for (let i = 0; i <recipe.ingredients.length ; i++) {
-                ingredient=recipe.ingredients[i];
-                //console.log(increment+"incrementsecond");
-                //  console.log(searchelement+"searcheleemtn");
-        //console.log(searchelement.indexOf(ingredient[0]));
-                //console.log(ingredient[0]+"ingredient");
+            recipes.forEach(function(recipe) {
+                var ingredient;
+                recipe_array.push(recipe);
 
-                if (searchelement.indexOf(ingredient[0])!==-1) {
-                   // console.log(increment+"incrementthird");
+                for (let i = 0; i <recipe.ingredients.length ; i++) {
+                    ingredient=recipe.ingredients[i];
 
-                    // console.log(increment+"increment");
-                   // console.log(recipes[increment]+"recipe");
-                    //console.log(recipes[increment]+"inloop");
-                    //console.log(recipe._id);
-               //     var recipe_id= recipe._id;
-                    recipe_array.pop();
-                   // delete recipes[increment];
-                    //console.log(recipes);
-             //       deleted=true;
+                    if (searchelement.indexOf(ingredient[0])!==-1) {
+
+                        recipe_array.pop();
+                    }
+
                 }
 
-
-            }
-           // if(deleted===false){
-           //     increment++;
-
-         //   }
-       //     deleted=false;
+            });
 
 
+            var random_number =Math.round(Math.random() * (recipe_array.length-1));
+if(recipe_array[random_number]!==undefined){
+    res.send(recipe_array[random_number].name)
+}
+else {
+    res.send("No Recipes found");
+}
         });
-       // console.log(recipe_array);
-       // recipe_array.forEach(function(doc) {
-       //     returnd+=doc.name+",";
-       // });
-        //console.log(returnd);
-       // var tarray = returnd.split(",");
-       // tarray.pop();
-
-        var random_number =Math.round(Math.random() * (recipe_array.length-1));
-
-        //res.send(tarray[random_number]);
-        res.send(recipe_array[random_number].name)
     });
-
-
-    // render the page and pass in any flash data if it exists
 
 
 };
