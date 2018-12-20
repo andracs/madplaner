@@ -1,4 +1,5 @@
 var Filter = require('../models/filter.js');
+var Tag = require('../models/tag.js');
 
 
 exports.filter_create = function(req, res) {
@@ -43,4 +44,31 @@ exports.filter_viewall = function(req, res) {
         //res.render("/recipe/random");
     });
 
+
+
 };
+
+
+exports.tag_viewall = function(req, res) {
+
+    Tag.find(function (err, docs) {
+        var returnd=[];
+        docs.forEach(function(doc) {
+            returnd.push(doc.name);
+        });
+        res.send(returnd);
+        //res.render("/recipe/random");
+    });
+};
+
+    exports.tag_create = function(req, res) {
+        var name= req.body.name;
+        var user = req.user;
+
+            var tag = new Tag({name: name,  user:user._id});
+            tag.save(function (err, recipe) {
+                if (err) return console.error(err);
+            });
+
+        res.render("create_tag.ejs");
+    };

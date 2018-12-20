@@ -293,6 +293,25 @@ module.exports = function(app, passport) {
     );
 
 
+
+    // =====================================
+// TAGS ==============================
+// =====================================
+//
+
+    app.get('/tag/create', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('create_tag.ejs');
+    });
+
+    app.post('/tag/create', filter_controller.tag_create
+    );
+
+    app.post('/tag/viewall', filter_controller.tag_viewall
+    );
+
+
 };
 
 // route middleware to make sure a user is logged in

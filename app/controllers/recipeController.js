@@ -11,6 +11,8 @@ exports.recipe_create = function(req, res) {
     var amountarray=req.body.amount;
     var description = req.body.description;
     var user = req.user;
+    var tagarray = req.body.tags.split(",");
+
 //console.log(req.body.description);
     //console.log(postBody);
     //console.log(name+ingredientarray+amountarray);
@@ -28,13 +30,12 @@ exports.recipe_create = function(req, res) {
             return el !== "";
         });
 
-        var recipe = new Recipe({name: name, ingredients: [], description: description, user:user._id});
+        var recipe = new Recipe({name: name, ingredients: [], description: description, user:user._id, tags:tagarray});
 
         for (index = 0; index < ingredientarray.length; ++index) {
             recipe.ingredients.push([ingredientarray[index], amountarray[index]]);
         }
 
-//console.log(recipe);
         recipe.save(function (err, recipe) {
             if (err) return console.error(err);
 
@@ -92,8 +93,16 @@ exports.recipe_random = function(req, res) {
 
     var filters = req.body.filters;
     var userid = "5c143382f68a5133909f7c57"//req.user._id;
-    // TODO insert admin object id for filters at some points
+    // TODO insert admin object id for filters at some point
     var forbiddenarray = [];
+    var tags = req.body.tags;
+    var requiredtags=[];
+    if(tags!==undefined) {
+        tags.forEach(function (tag) {
+            requiredtags.push(tag);
+            requiredtags.push("greek");
+        });
+    }
     var forbiddeningredients = new Promise(function(resolve, reject) {
         if (filters !== undefined) {
             filters.forEach(function (filtername) {
@@ -124,9 +133,13 @@ exports.recipe_random = function(req, res) {
             recipes.forEach(function(recipe) {
                 var ingredient;
                 recipe_array.push(recipe);
+                console.log(recipe.tags);
+                console.log(requiredtags);
+                console.log(requiredtags.indexOf(recipe.tags));
 
                 for (let i = 0; i <recipe.ingredients.length ; i++) {
                     ingredient=recipe.ingredients[i];
+                    console.log(ingredient[0]);
 
                     if (searchelement.indexOf(ingredient[0])!==-1) {
 
