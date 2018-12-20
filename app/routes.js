@@ -1,5 +1,6 @@
 var recipe_controller = require('../app/controllers/recipeController.js');
-var recipe_list = require('../app/recipeList');
+var filter_controller = require('../app/controllers/filterController.js');
+
 
 module.exports = function(app, passport) {
 
@@ -274,6 +275,24 @@ module.exports = function(app, passport) {
     });
 
 
+    // =====================================
+// Filters ==============================
+// =====================================
+//
+
+    app.get('/filters', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('filters.ejs');
+    });
+
+    app.post('/filters', filter_controller.filter_create
+    );
+
+    app.post('/filters/viewall', filter_controller.filter_viewall
+    );
+
+
 };
 
 // route middleware to make sure a user is logged in
@@ -286,3 +305,4 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
+

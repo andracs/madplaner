@@ -7,35 +7,32 @@
     <script>
 
         $(document).ready(function () {
-
-          //  var url_string = window.location.href; //window.location.href
-            //var url = new URL(url_string);
-            //var c = url.searchParams.get("recipe");
-            //console.log(c);
             $.post("random/", function(data, status){
-                //alert("Data: " + data + "\nStatus: " + status);
-                //console.log(data);
-                $("#recipe_list").append("<a href=/recipe/single?recipe="+data+ " class='btn btn-default'>"+data+ "</a>");
-
-               // data.ingredients.forEach(function (ingredient) {
-
-                 //   $("#ingredients").append(ingredient[0]+":"+ingredient[1]+"<br>");
-
-
-               // });
-             //   $("#description_recipe_single").append(data.description);
-
-                // $("#ingredients").append(data.ingredients);
+                $("#recipe_list").append("<a href=/recipe/single?recipe="+data+ " class='btn btn-default' id='random_recipe'>"+data+ "</a>");
             });
-            // console.log(string);
+            var filtercount =1;
+            $.post("/filters/viewall", function(data, status){
+                data.forEach(function(element) {
+                    $("#filter_list").append("<label for='ingredient'>"+element+ "</label> <br>"+" <input type='checkbox' id='filter"+filtercount+"' name='filters' value='"+element+"'> <br>");
+                    filtercount++;
+                });
+            });
 
-
-
-
-
-
-
-
+            $("#random_recipe_button").click(function() {
+                var filters =[]
+                for (let i = 1; i < filtercount; i++) {
+                    if($("#filter"+i).is(":checked")){
+                        filters.push( $("#filter"+i).val());
+                    }
+                     
+                }
+                //var filter1 = $("#filters").is(":checked")
+                console.log(filters);
+                $.post("random/",{ filters: filters, key2: "value2" }, function(data, status){
+                    $("#random_recipe").remove();
+                    $("#recipe_list").append("<a href=/recipe/single?recipe="+data+ " class='btn btn-default' id='random_recipe'>"+data+ "</a>");
+            });
+            });
         });
     </script>
     <title>Node Authentication</title>
@@ -68,9 +65,14 @@
 
 
 </div>
+<div id="filter_list">
+
+
+</div>
 <a href="/recipe" class="btn btn-default">Back to Create a recipe</a>
 
 <button class="btn btn-default" id="random_recipe_button">Get New random Recipe</button>
+
 
 
 </body>

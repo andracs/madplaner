@@ -6,9 +6,7 @@ var recipeSchema = mongoose.Schema({
 
     name : String,
     ingredients:Array,
-    description:String,
-    user:String,
-    tags:Array
+    user:String
 
 });
 
@@ -17,4 +15,4 @@ var recipeSchema = mongoose.Schema({
 
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('Recipe', recipeSchema);
+module.exports = mongoose.model('Filter', recipeSchema);

@@ -1,5 +1,6 @@
 
 var Recipe = require('../models/recipe.js');
+var Filter = require('../models/filter.js');
 
 exports.recipe_create = function(req, res) {
 
@@ -86,42 +87,131 @@ var result= new Recipe();
 
 };
 
+function get_filters(filters){
+    var forbiddeningredients = [];
+    filters.forEach(function (filtername) {
+        Filter.find({name: filtername, user: userid}, function (err, foundfilter) {
+            foundfilter.forEach(function (filter) {
+                // console.log(filter.ingredients);
+                filter.ingredients.forEach(function (ingredient) {
+                    forbiddeningredients.push(ingredient[0]);
+                    console.log(forbiddeningredients+"inside");
+
+
+                });
+                //forbiddeningredients.push(filter.ingredients);
+            });
+
+        }).then(
+
+
+
+        );
+    });
+    return forbiddeningredients;
+
+}
+
+
+
 exports.recipe_random = function(req, res) {
 
-    var result= new Recipe();
-    Recipe.find(function (err, docs) {
+    var result = new Recipe();
+    var filters = req.body.filters;
+    var hello = new Filter();
+    var forbiddeningredients = [];
+
+
+    forbiddeningredients=get_filters(filters).then(
+
+    );
+    var userid = "5c143382f68a5133909f7c57"//req.user._id;
+
+    var forbiddeningredients = [];
+    console.log(filters);
+    if (filters !== undefined) {
+
+    filters.forEach(function (filtername) {
+        Filter.find({name: filtername, user: userid}, function (err, foundfilter) {
+            foundfilter.forEach(function (filter) {
+                // console.log(filter.ingredients);
+                filter.ingredients.forEach(function (ingredient) {
+                    forbiddeningredients.push(ingredient[0]);
+                    console.log(forbiddeningredients+"inside");
+
+
+                });
+                //forbiddeningredients.push(filter.ingredients);
+            });
+
+        }).then(
+
+
+
+        );
+    });
+}
+    Recipe.find(function (err, recipes) {
+        //console.log(forbiddeningredients+"inside second find");
+        console.log(forbiddeningredients+"outside");
+
         var returnd="";
-        var searchelement="12";
+        var searchelement=forbiddeningredients;
 
         var increment=0;
-        docs.forEach(function(doc) {
+        var deleted=false;
+        var recipe_array=[];
+        //console.log(searchelement);
+        //console.log(recipes+"first");
+        recipes.forEach(function(recipe) {
             var ingredient;
-            increment++;
-            for (let i = 0; i <doc.ingredients.length ; i++) {
-                ingredient=doc.ingredients[i];
-                if (ingredient.includes(searchelement)===true) {
-                    delete docs[increment-1];
+            //console.log(increment+"incrementone");
+            //console.log(recipes);
+            recipe_array.push(recipe);
+
+            for (let i = 0; i <recipe.ingredients.length ; i++) {
+                ingredient=recipe.ingredients[i];
+                //console.log(increment+"incrementsecond");
+                //  console.log(searchelement+"searcheleemtn");
+        //console.log(searchelement.indexOf(ingredient[0]));
+                //console.log(ingredient[0]+"ingredient");
+
+                if (searchelement.indexOf(ingredient[0])!==-1) {
+                   // console.log(increment+"incrementthird");
+
+                    // console.log(increment+"increment");
+                   // console.log(recipes[increment]+"recipe");
+                    //console.log(recipes[increment]+"inloop");
+                    //console.log(recipe._id);
+               //     var recipe_id= recipe._id;
+                    recipe_array.pop();
+                   // delete recipes[increment];
+                    //console.log(recipes);
+             //       deleted=true;
                 }
 
+
             }
-        });
+           // if(deleted===false){
+           //     increment++;
 
-        docs.forEach(function(doc) {
-            returnd+=doc.name+",";
+         //   }
+       //     deleted=false;
+
+
         });
+       // console.log(recipe_array);
+       // recipe_array.forEach(function(doc) {
+       //     returnd+=doc.name+",";
+       // });
         //console.log(returnd);
-        var tarray = returnd.split(",");
-        tarray.pop();
+       // var tarray = returnd.split(",");
+       // tarray.pop();
 
-        var random_number =Math.round(Math.random() * (tarray.length-1));
+        var random_number =Math.round(Math.random() * (recipe_array.length-1));
 
-
-        //console.log(tarray[random_number].name);
-        //console.log(random_number+"randomnumberyo");
-       // var index_length = tarray.length;
-
-//console.log(tarray[random_number]);
-        res.send(tarray[random_number]);
+        //res.send(tarray[random_number]);
+        res.send(recipe_array[random_number].name)
     });
 
 
@@ -138,5 +228,11 @@ exports.recipe_remove = function(req, res) {
 
     Recipe.remove({name:req.params.recipetoremove,user:userid},function (err) {
         res.send(err);
+    });
+};
+
+var findOne = function (haystack, arr) {
+    return arr.some(function (v) {
+        return haystack.indexOf(v) >= 0;
     });
 };

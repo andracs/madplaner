@@ -8,7 +8,6 @@
     <script>
 
         function addFields(){
-           // console.log("works");
             var container = document.getElementById("ingredientslist");
             var increased =0;
             for (let i = 0; i < 5 ; i++) {
@@ -24,13 +23,6 @@
                 input.id = "ingredient";
                 container.appendChild(input);
 
-                container.appendChild(document.createTextNode("Amount: "));
-
-                var amount = document.createElement("input");
-                amount.type = "text";
-                amount.name = "amount";
-                amount.id = "amount";
-                container.appendChild(amount);
 
 
                 // Append a line break
@@ -44,18 +36,13 @@
 </head>
 <body>
 <div class="container">
-    <form action="/recipe" id="ingredientslist" method="post">
-        <label for="ingredient">Name of Recipe: </label>
+    <form action="/filters" id="ingredientslist" method="post">
+        <label for="ingredient">Name of Filter: </label>
         <br>
-        <input id="name" type="text" name="name" value="Lasagne">
+        <input id="name" type="text" name="name" value="">
 
-        <input type="submit" value="Create recipe">
+        <input type="submit" value="Create filter">
         <br>
-
-        <label for="description">Description: </label>
-        <br>
-        <textarea rows="5" cols="80" id="description" name="description"></textarea>
-<br>
 
 
     </form>
@@ -71,7 +58,7 @@
     </div>
 
 
-    </div>
+</div>
 
 </div>
 </body>

@@ -18,6 +18,6 @@ function createrecipe(){
 }
 
 function addFields(){
-    console.log("works");
+    //console.log("works");
 }
 //module.exports
