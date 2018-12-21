@@ -19,11 +19,30 @@
 
 </head>
 <body>
-<div class="p-3 mb-2 bg-light text-muted container recipe_random_something" style="padding: 100px">
-    <div class="" >
-   <div style="display:inline-block"><img src="/foodthinking.png"></div>
-    <div style="display:inline-block"><h1>Hva skal vi spise</h1></div>
+<div class="p-3 mb-2 bg-light text-muted recipe_random_something" style="padding: 100px">
+
+    <!--Top row-->
+    <div class="row">
+        <div style="display:inline-block"><img src="/foodthinking.png"></div>
+        <div style="display:inline-block"><h1>Hva skal vi spise?</h1>
+        <h3>En fed inspirations kilde</h3>
+        </div>
     </div>
+    <div class="row">
+        <!--First Column with picture-->
+
+        <div class="col-sm-5">
+
+<img src="/Good_Food_Display.jpg" id="recipe_picture" class="recipe_picture">
+
+
+
+        </div>
+
+
+        <!--Second Column recipe-->
+
+        <div class="col-sm-5 bg-white">
 
 <div id="recipe_list">
     <row>
@@ -50,8 +69,31 @@
 <a href="/recipe" class="btn btn-default">Back to Create a recipe</a>
 
 <button class="btn btn-default" id="random_recipe_button">Get New random Recipe</button>
+        </div>
+    </div>
+    <hr>
+    <!--Comments-->
 
+    <div class="row">
+        <div class="col-sm-4">
+            <p>Det er ofte svært at finde gode mad ideer</p>
+
+        </div>
+        <div class="col-sm-4">
+            <p>Det er ofte svært at finde gode mad ideer</p>
+
+        </div>
+
+    </div>
+
+    <hr>
+<div class="row">
+
+    <img src="/burger-chips-dinner.jpg" id="food_picture" class="food_picture">
 
 </div>
+</div>
 </body>
+<% include ./partials/footer.ejs %>
+
 </html>

@@ -1,3 +1,30 @@
+
 .recipe_random_something * {
-    margin: 10px 30px;
+    text-align: center;
+
+}
+.recipe_random_something * {
+    margin: 10px 50px;
+
+}
+.recipe_list{
+    justify-content: right;
+    display: flex;
+}
+.row{
+    display: flex;
+    justify-content: center;
+}
+
+.recipe_picture{
+    max-height: 100%;
+    max-width: 100%;
+}
+body,html {
+    padding-top:0!important;
+}
+.footer_links a{
+    display: block;
+
+
 }
