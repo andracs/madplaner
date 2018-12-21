@@ -92,7 +92,7 @@ var result= new Recipe();
 exports.recipe_random = function(req, res) {
 
     var filters = req.body.filters;
-    var userid = "5c143382f68a5133909f7c57"//req.user._id;
+    var userid = req.user._id; //"5c143382f68a5133909f7c57"
     // TODO insert admin object id for filters at some point
     var forbiddenarray = [];
     var tags = req.body.tags;
