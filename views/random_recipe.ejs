@@ -3,58 +3,10 @@
 <html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-    <script>
-
-        $(document).ready(function () {
-            $.post("random/", function(data, status){
-                $("#recipe_list").append("<a href=/recipe/single?recipe="+data+ " class='btn btn-default' id='random_recipe'>"+data+ "</a>");
-            });
-            var filtercount =1;
-            $.post("/filters/viewall", function(data, status){
-                data.forEach(function(element) {
-                    $("#filter_list").append("<label for='filter'>"+element+ "</label> <br>"+" <input type='checkbox' id='filter"+filtercount+"' name='filters' value='"+element+"'> <br>");
-                    filtercount++;
-                });
-            });
-
-            var tagcount =1;
-            $.post("/tag/viewall", function(data, status){
-                data.forEach(function(element) {
-                    $("#filter_list").append("<label for='tag'>"+element+ "</label> <br>"+" <input type='checkbox' id='tag"+tagcount+"' name='tags' value='"+element+"'> <br>");
-                    tagcount++;
-                });
-            });
-
-            $("#random_recipe_button").click(function() {
-                var filters =[]
-                for (let i = 1; i < filtercount; i++) {
-                    var filterselect=$("#filter"+i)
-                    if(filterselect.is(":checked")){
-                        filters.push( filterselect.val());
-                    }
-                     
-                }
-
-                var tags =[]
-
-                for (let i = 1; i < tagcount; i++) {
-                    var tagselect=$("#tag"+i)
-                    if(tagselect.is(":checked")){
-                        tags.push( tagselect.val());
-                    }
-
-                }
-                //var filter1 = $("#filters").is(":checked")
-                console.log(filters);
-                console.log(tags);
-
-                $.post("random/",{ filters: filters, tags:tags }, function(data, status){
-                    $("#random_recipe").remove();
-                    $("#recipe_list").append("<a href=/recipe/single?recipe="+data+ " class='btn btn-default' id='random_recipe'>"+data+ "</a>");
-            });
-            });
-        });
+    <link  rel="stylesheet" href="/styles.css">
+    <!-- Latest compiled and minified CSS bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="/random_recipe.js">
     </script>
     <title>Node Authentication</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
@@ -67,12 +19,11 @@
 
 </head>
 <body>
-<div>
-    Recipe list
-
-
-
-</div>
+<div class="p-3 mb-2 bg-light text-muted container recipe_random_something" style="padding: 100px">
+    <div class="" >
+   <div style="display:inline-block"><img src="/foodthinking.png"></div>
+    <div style="display:inline-block"><h1>Hva skal vi spise</h1></div>
+    </div>
 
 <div id="recipe_list">
     <row>
@@ -87,6 +38,12 @@
 
 </div>
 <div id="filter_list">
+<h3>List of filters</h3>
+
+</div>
+
+<div id="tag_list">
+    <h3>List of tags</h3>
 
 
 </div>
@@ -95,6 +52,6 @@
 <button class="btn btn-default" id="random_recipe_button">Get New random Recipe</button>
 
 
-
+</div>
 </body>
 </html>

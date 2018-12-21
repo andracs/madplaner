@@ -129,17 +129,42 @@ exports.recipe_random = function(req, res) {
             var searchelement=forbiddenpromise;
 
             var recipe_array=[];
+            var tag_array=[];
 
+//console.log(recipes);
             recipes.forEach(function(recipe) {
+                tag_array=[];
+                recipe.tags.forEach(function (arraytag) {
+                    tag_array.push(arraytag)
+
+                });
                 var ingredient;
                 recipe_array.push(recipe);
-                console.log(recipe.tags);
-                console.log(requiredtags);
-                console.log(requiredtags.indexOf(recipe.tags));
 
+                if(requiredtags.length>0){
+                    var found=false;
+                    for (let i = 0; i <tag_array.length ; i++) {
+                        if ( requiredtags.indexOf(tag_array[i])>=0) {
+                            found=true;
+                        }
+                    }
+                    if(found===true){
+                        found=false;
+                    }
+                    else{
+                        recipe_array.pop();
+                        found=false;
+                    }
+                }
+
+
+
+
+
+
+                // check if ingredient has a forbidden ingredient
                 for (let i = 0; i <recipe.ingredients.length ; i++) {
                     ingredient=recipe.ingredients[i];
-                    console.log(ingredient[0]);
 
                     if (searchelement.indexOf(ingredient[0])!==-1) {
 
@@ -150,7 +175,7 @@ exports.recipe_random = function(req, res) {
 
             });
 
-
+console.log(recipe_array);
             var random_number =Math.round(Math.random() * (recipe_array.length-1));
 if(recipe_array[random_number]!==undefined){
     res.send(recipe_array[random_number].name)

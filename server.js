@@ -43,6 +43,9 @@ const middleware = [
 ];
 app.use(middleware);
 
+//Static files
+app.use(express.static('public'));
+
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
