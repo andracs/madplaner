@@ -14,18 +14,18 @@ module.exports = function(app, passport) {
     // =====================================
     // LOGIN ===============================
     // =====================================
-    // show the login form
+    // Vis login form
     app.get('/login', function(req, res) {
 
         // render the page and pass in any flash data if it exists
         res.render('login.ejs', { message: req.flash('loginMessage') });
     });
 
-    // process the login form
+    // Bruger logger ind
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
-        failureRedirect : '/login', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
+        successRedirect : '/profile', // Hvis det virker send til profil
+        failureRedirect : '/login', // Hvis der er en fejl send tilbage til login
+        failureFlash : true // Tillad flash beskeder
     }));
 
 
@@ -38,20 +38,7 @@ module.exports = function(app, passport) {
         // render the page and pass in any flash data if it exists
         res.render('recipe.ejs', { message: req.flash('loginMessage'), data:{},errors:{}  } );
     });
-    app.get('/create/recipe', function(req, res) {
-        var Recipe            = require('../app/models/recipe');
 
-
-
-                var recipe = new Recipe({name:"Lasagne", ingredients: [["ingredient1","amount"],["ingredient2","amount"]]});
-
-                recipe.save(function (err, recipe) {
-                    if (err) return console.error(err);
-
-                });
-        res.redirect('/recipe');
-
-    });
     app.get('/app/createRecipe.js', function(req, res) {
 
         // render the page and pass in any flash data if it exists
@@ -280,13 +267,13 @@ module.exports = function(app, passport) {
 // =====================================
 //
 
-    app.get('/filters', function(req, res) {
+    app.get('/filter/create', function(req, res) {
 
         // render the page and pass in any flash data if it exists
         res.render('filters.ejs');
     });
 
-    app.post('/filters', filter_controller.filter_create
+    app.post('/filter/create', filter_controller.filter_create
     );
 
     app.post('/filters/viewall', filter_controller.filter_viewall
@@ -317,14 +304,14 @@ module.exports = function(app, passport) {
 
 
 };
-// route middleware to make sure a user is logged in
+// Tjek om brugeren er logget in
 function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on
+    // Hvis brugeren er logged ind så fortsæt til næste
     if (req.isAuthenticated())
         return next();
 
-    // if they aren't redirect them to the home page
+    // Ellers så send dem tilbage til forsiden
     res.redirect('/');
 }
 

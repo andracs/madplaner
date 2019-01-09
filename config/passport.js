@@ -1,3 +1,4 @@
+// Mest taget fra https://scotch.io/tutorials/easy-node-authentication-setup-and-local
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
@@ -436,6 +437,7 @@ module.exports = function(passport) {
     // =========================================================================
 // Google Authorize ================================================================
 // =========================================================================
+    
 
     passport.use( 'googleauthorize', new GoogleStrategy({
 

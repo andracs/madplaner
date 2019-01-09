@@ -4,10 +4,8 @@ var Filter = require('../models/filter.js');
 
 exports.recipe_create = function(req, res) {
 
-    const postBody = req.body;
     var name= req.body.name;
-    var ingredientarray=[];
-    ingredientarray= req.body.ingredient;
+    var ingredientarray= req.body.ingredient;
     var amountarray=req.body.amount;
     var description = req.body.description;
     var user = req.user;
@@ -21,6 +19,7 @@ exports.recipe_create = function(req, res) {
     //     console.log(a[index]);
     // }
 
+    //Filter empty inputs out
     if(ingredientarray!==undefined) {
        // console.log(ingredientarray);
         ingredientarray = ingredientarray.filter(function (el) {
@@ -73,11 +72,6 @@ var result= new Recipe();
         result.name=recipename;
         result.ingredients=recipe.ingredients;
         result.description=recipe.description;
-//result.push(recipename);
-//result.push(recipe.ingredients);
-
-        //console.log(recipe.ingredients);
-        //console.log(result);
         res.send(result);
 
     });
@@ -100,7 +94,6 @@ exports.recipe_random = function(req, res) {
     if(tags!==undefined) {
         tags.forEach(function (tag) {
             requiredtags.push(tag);
-            requiredtags.push("greek");
         });
     }
     var forbiddeningredients = new Promise(function(resolve, reject) {
@@ -121,17 +114,24 @@ exports.recipe_random = function(req, res) {
         resolve(forbiddenarray);
      });
 
-
+//@todo add login requirements
     forbiddeningredients.then(function(forbiddenpromise) {
 
+      /*
+        Recipe.find({ingredients: { $nin: forbiddenpromise }},function (err, recipes) {
+            console.log("what is this");
+            recipes.forEach(function(recipe) {
+            console.log(recipe);
+            });
+        });*/
+
+
         Recipe.find(function (err, recipes) {
-
             var searchelement=forbiddenpromise;
-
             var recipe_array=[];
             var tag_array=[];
 
-//console.log(recipes);
+                //console.log(recipes);
             recipes.forEach(function(recipe) {
                 tag_array=[];
                 recipe.tags.forEach(function (arraytag) {

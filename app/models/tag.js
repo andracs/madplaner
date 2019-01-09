@@ -2,11 +2,9 @@
 var mongoose = require('mongoose');
 
 // define the schema for our user model
-var recipeSchema = mongoose.Schema({
-
+var tagSchema = mongoose.Schema({
     name : String,
     user:String
-
 });
 
 
@@ -14,4 +12,4 @@ var recipeSchema = mongoose.Schema({
 
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('Tag', recipeSchema);
+module.exports = mongoose.model('Tag', tagSchema);
