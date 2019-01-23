@@ -8,4 +8,5 @@ module.exports = {
 run npm install
 run server.js
 goto localhost:8080
-or// mongodb://google:Hvadskalvispisegoogle12@ds119164.mlab.com:19164/users
+
+other// mongodb://google:Hvadskalvispisegoogle12@ds119164.mlab.com:19164/users
